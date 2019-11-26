@@ -1,0 +1,33 @@
+# CharsetDisable on
+# CharsetDefault utf-8
+# CharsetSourceEnc utf-8
+AddDefaultCharset utf-8
+
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule .* index.php [L]
+<FilesMatch ".(htpasswd|ini|phps|fla|psd|log|sh|json)$">
+ Order Allow,Deny
+ Deny from all
+</FilesMatch>
+
+RewriteEngine On
+RewriteCond %{HTTPS} =off 
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [QSA,L]
+
+Redirect 301 /about.html https://yoga-go.ru/About
+Redirect 301 /about-me.html https://yoga-go.ru/AboutMe
+Redirect 301 /articles.html https://yoga-go.ru/Articles
+Redirect 301 /gallery.html https://yoga-go.ru/Gallery
+Redirect 301 /video.html https://yoga-go.ru/Video
+
+Redirect 301 /glossary.html https://yoga-go.ru/KnowlegeBase/glossary
+Redirect 301 /yoga-philosophy.html https://yoga-go.ru/KnowlegeBase/yogaPhilosophy
+Redirect 301 /yoga-school.html https://yoga-go.ru/KnowlegeBase/yogaPhilosophy
+Redirect 301 /yoga-techniques.html https://yoga-go.ru/KnowlegeBase/yogaTechniques
+
+Redirect 301 /about-yogi-bhajan.html https://yoga-go.ru/Articles/aboutYogiBhajan
+Redirect 301 /instructor.html https://yoga-go.ru/Articles/instructor
+Redirect 301 /what-you-want-from-yoga.html https://yoga-go.ru/Articles/whatYouWantFromYoga
+Redirect 301 /mula-bandha.html https://yoga-go.ru/Articles/mulaBandha
