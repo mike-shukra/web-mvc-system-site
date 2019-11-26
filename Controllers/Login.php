@@ -16,7 +16,6 @@ class Login extends \App\Controller
     
     public function run(){
         $params = array();
-        // $auth = new \App\Auth;
         $auth = $this->auth;
         if($auth->authorization())
             return $this->render('LoginTrue', $params);
@@ -32,4 +31,5 @@ class Login extends \App\Controller
 
         return $this->render('Login');
     }
+
 }

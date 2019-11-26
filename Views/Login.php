@@ -5,7 +5,7 @@
         <?php
         //~ если есть ошибки выводим и предлагаем восстановить пароль
         if (isset($params[error]))
-            echo $params[error] . '<a href="recovery.php">Восстановить пароль</a><br/>';
+            echo $params[error] . '<a href="/Recovery">Восстановить пароль</a><br/>';
         ?>
         <h1>Авторизация</h1>
 

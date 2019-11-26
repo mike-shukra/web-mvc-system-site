@@ -109,7 +109,6 @@ class Auth {
 			if ($db->query("SELECT * FROM  `users` WHERE  `login_user` =  '".$login."';", 'num_row', 0)==1) $error[]='Введен не верный пароль или акаунт не активирован администратором';
 			else $error[]='Такой пользователь не существует';
 			$_SESSION['error'] = $this->error_print($error);
-			// $_SESSION['error'] = array('a', 'b');
 			return false;
 		}
 	}
@@ -127,13 +126,16 @@ class Auth {
 	###
 	#	Восстановление пароля
 	function recovery_pass($login, $mail) {
+		$error = null;
+		$_SESSION['error'] = null;
 		$db = $this->mysql; //~ объект класса
 		$login = $db->screening($login);
 		$db_inf = $db->query("SELECT * FROM `users` WHERE `login_user`='".$login."';", 'accos', '');
 		if ($db->query("SELECT * FROM `users` WHERE `login_user`='".$login."';", 'num_row', '')!=1) {
 			//~ не найден такой пользователь
 			$error[]='Пользователь с таким именем не найден';
-			return $this->error_print($error);
+			$_SESSION['error'] = $this->error_print($error);
+			return false;
 		} else {
 			//~ проверка email
 			if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) $error[]='Введен не корректный email';
@@ -142,8 +144,8 @@ class Auth {
 				//~ восстанавливаем пароль
 				$new_passwd = $this->generateCode(8);
 				$new_passwd_sql = md5($new_passwd.'lol');
-				$message = "Вы запросили восстановление пароля на сайте %sitename% для учетной записи ".$db_inf['login_user']." \nВаш новый пароль: ".$new_passwd."\n\n С уважением администрация сайта %sitename%.";
-				if (mail($mail, "Восстановление пароля", $message, "From: webmaster@sitename.ru\r\n"."Reply-To: webmaster@sitename.ru\r\n"."X-Mailer: PHP/" . phpversion())) {
+				$message = "Вы запросили восстановление пароля на сайте yoga-go.ru для учетной записи ".$db_inf['login_user']." \nВаш новый пароль: ".$new_passwd."\n\n С уважением администрация сайта yoga-go.ru.";
+				if (mail($mail, "Восстановление пароля", $message, "From: admin@yoga-go.ru\r\n"."Reply-To: admin@yoga-go.ru\r\n"."X-Mailer: PHP/" . phpversion())) {
 					//~ почта отправлена, обновляем пароль в базе
 					$db->query("UPDATE `users` SET `passwd_user`='".$new_passwd_sql."' WHERE `id_user` = ".$db_inf['id_user'].";", '', '');
 					//~ все успешно - возвращаем положительный ответ
@@ -151,9 +153,13 @@ class Auth {
 				} else {
 					//~ ошибка при отправке письма
 					$error[]='В данный момент восстановление пароля не возможно, свяжитесь с администрацией сайта';
-					return $this->error_print($error);
+					$_SESSION['error'] = $this->error_print($error);
+					return false;
 				}
-			} else return $this->error_print($error);
+			} else {
+				$_SESSION['error'] = $this->error_print($error);
+				return false;
+			}
 		}
 	}
 
